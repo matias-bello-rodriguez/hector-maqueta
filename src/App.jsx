@@ -5,14 +5,16 @@ import CotizacionesModule from './components/crm/CotizacionesModule';
 import EventosModule from './components/crm/EventosModule';
 import CalendarioModule from './components/crm/CalendarioModule';
 import ReportesModule from './components/crm/ReportesModule';
+import POSModule from './components/crm/POSModule';
 
 function App() {
   const [activeModule, setActiveModule] = useState('dashboard');
 
   const modules = [
     { id: 'dashboard', name: 'Dashboard', icon: '📊' },
+    { id: 'pos', name: 'Punto de Venta', icon: '💰' },
     { id: 'clientes', name: 'Clientes', icon: '👥' },
-    { id: 'cotizaciones', name: 'Cotizaciones', icon: '💰' },
+    { id: 'cotizaciones', name: 'Cotizaciones', icon: '📝' },
     { id: 'eventos', name: 'Eventos', icon: '🎉' },
     { id: 'calendario', name: 'Calendario', icon: '📅' },
     { id: 'reportes', name: 'Reportes', icon: '📈' },
@@ -22,6 +24,8 @@ function App() {
     switch (activeModule) {
       case 'dashboard':
         return <Dashboard />;
+      case 'pos':
+        return <POSModule />;
       case 'clientes':
         return <ClientesModule />;
       case 'cotizaciones':
