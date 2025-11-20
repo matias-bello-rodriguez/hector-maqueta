@@ -61,14 +61,14 @@ const ClientesModule = () => {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-slate-800">Gestión de Clientes</h2>
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-800">Gestión de Clientes</h2>
         <button
           onClick={handleAddCliente}
-          className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md transition-colors flex items-center gap-2"
+          className="bg-emerald-500 hover:bg-emerald-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold shadow-md transition-colors flex items-center justify-center gap-2 text-sm md:text-base"
         >
-          <span>➕</span> Nuevo Cliente
+          <span>➕</span> <span className="hidden sm:inline">Nuevo Cliente</span><span className="sm:hidden">Nuevo</span>
         </button>
       </div>
 
@@ -86,44 +86,46 @@ const ClientesModule = () => {
       {/* Tabla de Clientes */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[600px]">
             <thead className="bg-slate-700 text-white">
               <tr>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Nombre</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Email</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Teléfono</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Tipo</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Eventos</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold">Acciones</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold">Nombre</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold hidden sm:table-cell">Email</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold hidden md:table-cell">Teléfono</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold">Tipo</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold hidden lg:table-cell">Eventos</th>
+                <th className="px-3 md:px-6 py-2 md:py-3 text-left text-xs md:text-sm font-semibold">Acciones</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
               {filteredClientes.map((cliente) => (
                 <tr key={cliente.id} className="hover:bg-slate-50">
-                  <td className="px-6 py-4 text-sm text-slate-800 font-medium">{cliente.nombre}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{cliente.email}</td>
-                  <td className="px-6 py-4 text-sm text-slate-600">{cliente.telefono}</td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-800 font-medium">{cliente.nombre}</td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-600 hidden sm:table-cell">{cliente.email}</td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-600 hidden md:table-cell">{cliente.telefono}</td>
+                  <td className="px-3 md:px-6 py-3 md:py-4">
+                    <span className={`inline-flex px-2 md:px-3 py-1 text-xs font-semibold rounded-full ${
                       cliente.empresa === 'Corporativo' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
                     }`}>
                       {cliente.empresa}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-slate-600 text-center">{cliente.eventos}</td>
-                  <td className="px-6 py-4 text-sm">
-                    <button
-                      onClick={() => handleEditCliente(cliente)}
-                      className="text-blue-600 hover:text-blue-800 mr-3"
-                    >
-                      ✏️ Editar
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCliente(cliente.id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      🗑️ Eliminar
-                    </button>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm text-slate-600 text-center hidden lg:table-cell">{cliente.eventos}</td>
+                  <td className="px-3 md:px-6 py-3 md:py-4 text-xs md:text-sm">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEditCliente(cliente)}
+                        className="text-blue-600 hover:text-blue-800"
+                      >
+                        ✏️
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCliente(cliente.id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        🗑️
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -134,47 +136,47 @@ const ClientesModule = () => {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-2xl p-8 max-w-2xl w-full mx-4">
-            <h3 className="text-2xl font-bold text-slate-800 mb-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl p-4 md:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <h3 className="text-xl md:text-2xl font-bold text-slate-800 mb-4 md:mb-6">
               {selectedCliente ? 'Editar Cliente' : 'Nuevo Cliente'}
             </h3>
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Nombre Completo / Empresa</label>
+                <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Nombre Completo / Empresa</label>
                 <input
                   type="text"
                   value={formData.nombre}
                   onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 />
               </div>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Email</label>
+                  <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Email</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
+                  <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Teléfono</label>
                   <input
                     type="tel"
                     value={formData.telefono}
                     onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Tipo de Cliente</label>
+                <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Tipo de Cliente</label>
                 <select
                   value={formData.empresa}
                   onChange={(e) => setFormData({ ...formData, empresa: e.target.value })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 >
                   <option value="">Seleccionar...</option>
                   <option value="Particular">Particular</option>
@@ -182,34 +184,34 @@ const ClientesModule = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Dirección</label>
+                <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Dirección</label>
                 <input
                   type="text"
                   value={formData.direccion}
                   onChange={(e) => setFormData({ ...formData, direccion: e.target.value })}
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 />
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Notas</label>
+                <label className="block text-xs md:text-sm font-semibold text-slate-700 mb-2">Notas</label>
                 <textarea
                   value={formData.notas}
                   onChange={(e) => setFormData({ ...formData, notas: e.target.value })}
                   rows="3"
-                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  className="w-full px-3 md:px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm md:text-base"
                 ></textarea>
               </div>
             </div>
-            <div className="flex gap-4 mt-6">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-4 md:mt-6">
               <button
                 onClick={handleSaveCliente}
-                className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg font-semibold"
+                className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold text-sm md:text-base"
               >
                 💾 Guardar
               </button>
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 px-6 py-3 rounded-lg font-semibold"
+                className="flex-1 bg-slate-300 hover:bg-slate-400 text-slate-800 px-4 md:px-6 py-2 md:py-3 rounded-lg font-semibold text-sm md:text-base"
               >
                 ❌ Cancelar
               </button>

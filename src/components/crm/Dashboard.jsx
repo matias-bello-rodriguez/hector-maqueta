@@ -33,33 +33,33 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold text-slate-800">Dashboard</h2>
-        <div className="text-sm text-slate-600">
+    <div className="space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <h2 className="text-2xl md:text-3xl font-bold text-slate-800">Dashboard</h2>
+        <div className="text-xs md:text-sm text-slate-600">
           Última actualización: {new Date().toLocaleString('es-CL')}
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {stats.map((stat, index) => (
-          <div key={index} className={`bg-gradient-to-br ${stat.color} text-white rounded-xl shadow-lg p-6 transform hover:scale-105 transition-transform`}>
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-4xl">{stat.icon}</span>
-              <span className="text-sm bg-white/20 px-2 py-1 rounded">{stat.trend}</span>
+          <div key={index} className={`bg-gradient-to-br ${stat.color} text-white rounded-xl shadow-lg p-4 md:p-6 transform hover:scale-105 transition-transform`}>
+            <div className="flex items-center justify-between mb-3 md:mb-4">
+              <span className="text-3xl md:text-4xl">{stat.icon}</span>
+              <span className="text-xs md:text-sm bg-white/20 px-2 py-1 rounded">{stat.trend}</span>
             </div>
-            <div className="text-3xl font-bold mb-1">{stat.value}</div>
-            <div className="text-sm opacity-90">{stat.label}</div>
+            <div className="text-2xl md:text-3xl font-bold mb-1">{stat.value}</div>
+            <div className="text-xs md:text-sm opacity-90">{stat.label}</div>
           </div>
         ))}
       </div>
 
       {/* Gráficos */}
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-semibold text-slate-800 mb-4">Ventas Mensuales</h3>
-          <ResponsiveContainer width="100%" height={300}>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+        <div className="bg-white rounded-xl shadow-md p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-semibold text-slate-800 mb-4">Ventas Mensuales</h3>
+          <ResponsiveContainer width="100%" height={250}>
             <LineChart data={ventasMensuales}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="mes" />
@@ -72,9 +72,9 @@ const Dashboard = () => {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-white rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-semibold text-slate-800 mb-4">Distribución de Eventos</h3>
-          <ResponsiveContainer width="100%" height={300}>
+        <div className="bg-white rounded-xl shadow-md p-4 md:p-6">
+          <h3 className="text-lg md:text-xl font-semibold text-slate-800 mb-4">Distribución de Eventos</h3>
+          <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie
                 data={tipoEventos}
@@ -98,8 +98,8 @@ const Dashboard = () => {
 
       {/* Próximos Eventos */}
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
-        <div className="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-4">
-          <h3 className="text-xl font-semibold">Próximos Eventos</h3>
+        <div className="bg-gradient-to-r from-slate-700 to-slate-800 text-white p-3 md:p-4">
+          <h3 className="text-lg md:text-xl font-semibold">Próximos Eventos</h3>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full">
