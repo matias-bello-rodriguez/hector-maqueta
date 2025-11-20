@@ -195,12 +195,12 @@ const ReportesModule = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold mb-2">⚠️ Áreas de Mejora:</h4>
+            <h4 className="font-semibold mb-2">📊 Métricas Clave:</h4>
             <ul className="space-y-1 text-sm opacity-95">
-              <li>• Aumentar tasa de conversión de cotizaciones</li>
-              <li>• Expandir portafolio de servicios corporativos</li>
-              <li>• Implementar CRM para mejor seguimiento</li>
-              <li>• Fortalecer marketing digital sostenible</li>
+              <li>• ROI promedio: 245% en eventos corporativos</li>
+              <li>• Tiempo de respuesta promedio: 24 horas</li>
+              <li>• Eventos completados: 98% sin incidencias</li>
+              <li>• NPS (Net Promoter Score): 87 puntos</li>
             </ul>
           </div>
         </div>
