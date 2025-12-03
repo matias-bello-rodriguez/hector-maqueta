@@ -6,8 +6,10 @@ import EventosModule from './components/crm/EventosModule';
 import CalendarioModule from './components/crm/CalendarioModule';
 import ReportesModule from './components/crm/ReportesModule';
 import POSModule from './components/crm/POSModule';
+import Login from './components/Login';
 
 function App() {
+  const [user, setUser] = useState(null);
   const [activeModule, setActiveModule] = useState('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -20,6 +22,15 @@ function App() {
     { id: 'calendario', name: 'Calendario', icon: '📅' },
     { id: 'reportes', name: 'Reportes', icon: '📈' },
   ];
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setActiveModule('dashboard');
+  };
 
   const renderModule = () => {
     switch (activeModule) {
@@ -41,6 +52,10 @@ function App() {
         return <Dashboard />;
     }
   };
+
+  if (!user) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
@@ -67,8 +82,8 @@ function App() {
               <p className="text-xs md:text-sm opacity-90 mt-1 hidden sm:block">Sistema de Gestión de Eventos y Banquetería</p>
             </div>
             <div className="text-right hidden md:block">
-              <p className="text-sm opacity-90">Región del Biobío</p>
-              <p className="text-xs opacity-75">Proyecto de Título GAIT02</p>
+              <p className="text-sm opacity-90">Hola, {user.username}</p>
+              <button onClick={handleLogout} className="text-xs opacity-75 hover:underline">Cerrar Sesión</button>
             </div>
           </div>
         </div>
@@ -109,6 +124,13 @@ function App() {
                   <span className="font-medium">{module.name}</span>
                 </button>
               ))}
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-3 rounded-lg transition-all flex items-center gap-3 bg-red-50 text-red-700 hover:bg-red-100 mt-4 lg:hidden"
+              >
+                <span className="text-2xl">🚪</span>
+                <span className="font-medium">Cerrar Sesión</span>
+              </button>
             </div>
           </nav>
         </aside>

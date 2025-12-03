@@ -1,12 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { API_URL } from '../../config';
 
 const ClientesModule = () => {
-  const [clientes, setClientes] = useState([
-    { id: 1, nombre: 'María González', email: 'maria@email.com', telefono: '+56912345678', empresa: 'Particular', eventos: 3, ultimoEvento: '2025-08-15' },
-    { id: 2, nombre: 'Carlos Ramírez', email: 'carlos@email.com', telefono: '+56987654321', empresa: 'Particular', eventos: 1, ultimoEvento: '2025-10-20' },
-    { id: 3, nombre: 'TechCorp S.A.', email: 'contacto@techcorp.cl', telefono: '+56922334455', empresa: 'Corporativo', eventos: 5, ultimoEvento: '2025-11-10' },
-    { id: 4, nombre: 'Ana Martínez', email: 'ana.m@email.com', telefono: '+56933445566', empresa: 'Particular', eventos: 2, ultimoEvento: '2025-09-25' },
-  ]);
+  const [clientes, setClientes] = useState([]);
+
+  useEffect(() => {
+    fetchClientes();
+  }, []);
+
+  const fetchClientes = async () => {
+    try {
+      const response = await fetch(`${API_URL}/clientes`);
+      const data = await response.json();
+      setClientes(data);
+    } catch (error) {
+      console.error('Error fetching clientes:', error);
+    }
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [selectedCliente, setSelectedCliente] = useState(null);
@@ -33,24 +43,54 @@ const ClientesModule = () => {
     setShowModal(true);
   };
 
-  const handleSaveCliente = () => {
-    if (selectedCliente) {
-      setClientes(clientes.map(c => c.id === selectedCliente.id ? { ...c, ...formData } : c));
-    } else {
-      const newCliente = {
-        id: clientes.length + 1,
-        ...formData,
-        eventos: 0,
-        ultimoEvento: null
-      };
-      setClientes([...clientes, newCliente]);
+  const handleSaveCliente = async () => {
+    try {
+      if (selectedCliente) {
+        const response = await fetch(`${API_URL}/clientes/${selectedCliente.id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        if (response.ok) {
+          fetchClientes();
+        }
+      } else {
+        const newCliente = {
+          ...formData,
+          eventos: 0,
+          ultimoEvento: null
+        };
+        const response = await fetch(`${API_URL}/clientes`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newCliente),
+        });
+        if (response.ok) {
+          fetchClientes();
+        }
+      }
+      setShowModal(false);
+    } catch (error) {
+      console.error('Error saving cliente:', error);
     }
-    setShowModal(false);
   };
 
-  const handleDeleteCliente = (id) => {
+  const handleDeleteCliente = async (id) => {
     if (confirm('¿Estás seguro de eliminar este cliente?')) {
-      setClientes(clientes.filter(c => c.id !== id));
+      try {
+        const response = await fetch(`${API_URL}/clientes/${id}`, {
+          method: 'DELETE',
+        });
+        if (response.ok) {
+          fetchClientes();
+        }
+      } catch (error) {
+        console.error('Error deleting cliente:', error);
+      }
     }
   };
 

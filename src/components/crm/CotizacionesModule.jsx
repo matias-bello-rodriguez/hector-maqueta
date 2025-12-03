@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { API_URL } from '../../config';
 
 const CotizacionesModule = () => {
-  const [cotizaciones, setCotizaciones] = useState([
-    { id: 1, cliente: 'María González', evento: 'Matrimonio', fecha: '2025-12-20', personas: 150, total: 4500000, estado: 'Aprobada' },
-    { id: 2, cliente: 'TechCorp S.A.', evento: 'Evento Corporativo', fecha: '2025-11-28', personas: 80, total: 2400000, estado: 'Pendiente' },
-    { id: 3, cliente: 'Carlos Ramírez', evento: 'Cumpleaños', fecha: '2025-12-02', personas: 50, total: 1250000, estado: 'En revisión' },
-  ]);
+  const [cotizaciones, setCotizaciones] = useState([]);
+
+  useEffect(() => {
+    fetchCotizaciones();
+  }, []);
+
+  const fetchCotizaciones = async () => {
+    try {
+      const response = await fetch(`${API_URL}/cotizaciones`);
+      const data = await response.json();
+      setCotizaciones(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Error fetching cotizaciones:', error);
+    }
+  };
 
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -61,10 +72,9 @@ const CotizacionesModule = () => {
     return total;
   };
 
-  const handleGenerarCotizacion = () => {
+  const handleGenerarCotizacion = async () => {
     const total = calcularTotal();
     const nuevaCotizacion = {
-      id: cotizaciones.length + 1,
       cliente: formData.cliente,
       evento: formData.evento,
       fecha: formData.fecha,
@@ -72,9 +82,23 @@ const CotizacionesModule = () => {
       total: total,
       estado: 'Pendiente'
     };
-    setCotizaciones([...cotizaciones, nuevaCotizacion]);
-    setShowModal(false);
-    resetForm();
+
+    try {
+      const response = await fetch(`${API_URL}/cotizaciones`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevaCotizacion),
+      });
+      if (response.ok) {
+        fetchCotizaciones();
+        setShowModal(false);
+        resetForm();
+      }
+    } catch (error) {
+      console.error('Error creating cotizacion:', error);
+    }
   };
 
   const resetForm = () => {
@@ -96,10 +120,21 @@ const CotizacionesModule = () => {
     });
   };
 
-  const handleEstadoChange = (id, nuevoEstado) => {
-    setCotizaciones(cotizaciones.map(c => 
-      c.id === id ? { ...c, estado: nuevoEstado } : c
-    ));
+  const handleEstadoChange = async (id, nuevoEstado) => {
+    try {
+      const response = await fetch(`${API_URL}/cotizaciones/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ estado: nuevoEstado }),
+      });
+      if (response.ok) {
+        fetchCotizaciones();
+      }
+    } catch (error) {
+      console.error('Error updating cotizacion status:', error);
+    }
   };
 
   return (

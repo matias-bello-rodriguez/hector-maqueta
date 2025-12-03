@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { API_URL } from '../../config';
 
 const POSModule = () => {
   const [carrito, setCarrito] = useState([]);
@@ -10,12 +11,21 @@ const POSModule = () => {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState('todos');
 
   // Clientes disponibles
-  const clientes = [
-    { id: 1, nombre: 'María González', email: 'maria@email.com', telefono: '+56912345678' },
-    { id: 2, nombre: 'Carlos Ramírez', email: 'carlos@email.com', telefono: '+56987654321' },
-    { id: 3, nombre: 'Ana Martínez', email: 'ana.m@email.com', telefono: '+56933445566' },
-    { id: 4, nombre: 'TechCorp S.A.', email: 'contacto@techcorp.cl', telefono: '+56922334455' },
-  ];
+  const [clientes, setClientes] = useState([]);
+
+  useEffect(() => {
+    fetchClientes();
+  }, []);
+
+  const fetchClientes = async () => {
+    try {
+      const response = await fetch(`${API_URL}/clientes`);
+      const data = await response.json();
+      setClientes(data);
+    } catch (error) {
+      console.error('Error fetching clientes:', error);
+    }
+  };
 
   // Productos y servicios disponibles
   const productos = [
@@ -93,7 +103,7 @@ const POSModule = () => {
     return calcularSubtotal() + calcularIVA();
   };
 
-  const procesarVenta = () => {
+  const procesarVenta = async () => {
     if (!cliente) {
       alert('Por favor selecciona un cliente');
       return;
@@ -108,8 +118,6 @@ const POSModule = () => {
     }
 
     const venta = {
-      id: Date.now(),
-      fecha: new Date(),
       cliente: cliente,
       items: carrito,
       subtotal: calcularSubtotal(),
@@ -119,16 +127,36 @@ const POSModule = () => {
       estado: 'Completada'
     };
 
-    setVentaActual(venta);
-    setMostrarTicket(true);
-    
-    // Limpiar después de la venta
-    setTimeout(() => {
-      setCarrito([]);
-      setCliente(null);
-      setMetodoPago('');
-      setMostrarTicket(false);
-    }, 30000);
+    try {
+      const response = await fetch(`${API_URL}/ventas`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(venta),
+      });
+      
+      if (response.ok) {
+        const nuevaVenta = await response.json();
+        // Convert timestamp to Date object for display if needed, 
+        // but the backend returns the object. We can just use current date for display 
+        // or parse the response. For simplicity in ticket, we use local date or response date.
+        // The backend response includes the ID.
+        setVentaActual({ ...nuevaVenta, fecha: new Date() }); 
+        setMostrarTicket(true);
+        
+        // Limpiar después de la venta
+        setTimeout(() => {
+          setCarrito([]);
+          setCliente(null);
+          setMetodoPago('');
+          setMostrarTicket(false);
+        }, 30000);
+      }
+    } catch (error) {
+      console.error('Error processing venta:', error);
+      alert('Error al procesar la venta');
+    }
   };
 
   const imprimirTicket = () => {
